@@ -27,8 +27,7 @@ def handle_hello():
 def signup():
     data = request.get_json()
 
-    is_active = data.get("is_active", "False").lower() == 'true'
-    new_user = User(email = data["email"], password = data["password"], is_active =is_active)
+    new_user = User(email = data["email"], password = data["password"], is_active =data["is_active"])
 
     db.session.add(new_user)
     db.session.commit()
@@ -44,6 +43,15 @@ def login():
     if email != user.email or password != user.password:
         return jsonify({"msg": "Bad email or password"}), 401
 
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    access_token = create_access_token(identity=user.id)
+    return jsonify(access_token=access_token), 200
 
+# Protege una ruta con jwt_required, bloquea las peticiones sin un JWT válido
+@api.route("/private", methods=["GET"])
+@jwt_required()
+def private():
+    # Accede a la identidad del usuario actual con get_jwt_identity
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    
+    return jsonify(user.serialize()), 200

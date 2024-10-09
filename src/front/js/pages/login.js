@@ -1,48 +1,50 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import { useNavigate } from "react-router-dom";
 
-
-export const Signup = () => {
+export const Login = () => {
 	const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const navigate = useNavigate()
 
+    // useEffect(()=>localStorage.removeItem("jwt-token"),[])
+
     const handleSubmit = (e) => { 
         e.preventDefault();
-    
+        
+
         const raw = {
             email: email,
-            password: password,
-            is_active: true
+            password: password
         };
-        
+    
         const requestOptions = {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(raw)
         };
-    
-        fetch("https://automatic-space-eureka-r4r6vxqj6x4rcw65-3001.app.github.dev/api/signup", requestOptions)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((result) => navigate("/login"))
-        .catch((error) => console.error('Fetch error:', error));
-            
-            
+   
+        fetch("https://automatic-space-eureka-r4r6vxqj6x4rcw65-3001.app.github.dev/api/login", requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); 
+            })
+            .then((result) =>  {
+                localStorage.setItem("jwt-token", result.access_token);
+                actions.changeAuthenticated(true)
+                navigate("/private");
+            })
+            .catch((error) => console.error('Fetch error:', error));
     };
 
 	return (
 		<div className="d-flex justify-content-center align-items-center h-75 ">
 			<div className= " p-5 rounded-3 shadow">
                 <form onSubmit = {handleSubmit}>
-                    <h2 className="text-center mb-3">Sign up</h2>
+                    <h2 className="text-center mb-3">Log in</h2>
                     <div className="mb-4">
                         <label htmlFor = "email">Email</label>
                         <input type = "email" className="form-control" id = "email" value={email} onChange ={(e)=>setEmail(e.target.value)} placeholder="Enter email"></input>
@@ -52,11 +54,13 @@ export const Signup = () => {
                         <input type = "password" className="form-control" id= "password" value={password} onChange ={(e)=>setPassword(e.target.value)} placeholder="Enter password"></input>
                     </div>
                     <div className="text-center">
-                        <button type="submit" className="btn btn-primary w-100">Sign up</button>
+                        <button type="submit" className="btn btn-primary w-100">Login</button>
                     </div>
-                    <p>already have an account? <Link to="/login">log in</Link></p>
+                    <p>don't have an account? <Link to="/signup">register</Link></p>
                 </form>
             </div>
+			
+			
 		</div>
 	);
 };
