@@ -15,8 +15,7 @@ export const Signup = () => {
     
         const raw = {
             email: email,
-            password: password,
-            is_active: true
+            password: password
         };
         
         const requestOptions = {
@@ -25,17 +24,15 @@ export const Signup = () => {
             body: JSON.stringify(raw)
         };
     
-        fetch("https://automatic-space-eureka-r4r6vxqj6x4rcw65-3001.app.github.dev/api/signup", requestOptions)
+        fetch(process.env.BACKEND_URL + "/api/signup", requestOptions)
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
-        .then((result) => navigate("/login"))
+        .then(navigate("/login"))
         .catch((error) => console.error('Fetch error:', error));
-            
-            
     };
 
 	return (

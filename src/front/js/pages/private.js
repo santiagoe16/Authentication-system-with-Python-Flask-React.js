@@ -14,7 +14,7 @@ export const Private = () => {
                 navigate("/login")
             }
         
-            fetch("https://automatic-space-eureka-r4r6vxqj6x4rcw65-3001.app.github.dev/api/private",{
+            fetch(process.env.BACKEND_URL + "/api/private",{
                 method:'GET',
                 headers: { 
                     "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const Private = () => {
                 .then((data) => setUser(data))
                 .catch((error) => console.error('Fetch error:', error));
         },[])
-        // localStorage.removeItem("jwt-token")
+        
 	return (
 		<div className="d-flex justify-content-center align-items-center h-75 ">
 			<div className= " p-5 rounded-3 shadow">

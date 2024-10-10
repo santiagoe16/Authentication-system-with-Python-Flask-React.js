@@ -27,7 +27,7 @@ def handle_hello():
 def signup():
     data = request.get_json()
 
-    new_user = User(email = data["email"], password = data["password"], is_active =data["is_active"])
+    new_user = User(email = data["email"], password = data["password"], is_active = True)
 
     db.session.add(new_user)
     db.session.commit()

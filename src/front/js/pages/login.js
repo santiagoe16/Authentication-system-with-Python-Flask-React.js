@@ -13,7 +13,6 @@ export const Login = () => {
     const handleSubmit = (e) => { 
         e.preventDefault();
         
-
         const raw = {
             email: email,
             password: password
@@ -25,7 +24,7 @@ export const Login = () => {
             body: JSON.stringify(raw)
         };
    
-        fetch("https://automatic-space-eureka-r4r6vxqj6x4rcw65-3001.app.github.dev/api/login", requestOptions)
+        fetch(process.env.BACKEND_URL + "/api/login", requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
