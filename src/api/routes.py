@@ -39,8 +39,9 @@ def signup():
 def login():
     email = request.json.get("email")
     password = request.json.get("password")
-    user = User.query.filter_by(email = email).first()
-    if email != user.email or password != user.password:
+    user = User.query.filter_by(email = email, password = password).first()
+
+    if user is None or password != user.password:
         return jsonify({"msg": "Bad email or password"}), 401
 
     access_token = create_access_token(identity=user.id)

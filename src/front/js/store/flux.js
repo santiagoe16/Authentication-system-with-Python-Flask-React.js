@@ -21,8 +21,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
-			changeAuthenticated: (bool) => {
+			verifyToken: () => {
 				
+				const token = localStorage.getItem('jwt-token');
+
+				if(token != null){
+					setStore({ authenticated: true })
+				}
+				
+			},
+			changeAuthenticated: (bool) => {
 				setStore({ authenticated: bool });
 			},
 			getMessage: async () => {

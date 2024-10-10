@@ -6,6 +6,7 @@ export const Login = () => {
 	const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [msgError, setMsgError] = useState("")
     const navigate = useNavigate()
 
     // useEffect(()=>localStorage.removeItem("jwt-token"),[])
@@ -13,6 +14,8 @@ export const Login = () => {
     const handleSubmit = (e) => { 
         e.preventDefault();
         
+        setMsgError(null)
+
         const raw = {
             email: email,
             password: password
@@ -27,6 +30,7 @@ export const Login = () => {
         fetch(process.env.BACKEND_URL + "/api/login", requestOptions)
             .then((response) => {
                 if (!response.ok) {
+                    setMsgError("Bad email or password")
                     throw new Error('Network response was not ok');
                 }
                 return response.json(); 
@@ -36,7 +40,10 @@ export const Login = () => {
                 actions.changeAuthenticated(true)
                 navigate("/private");
             })
-            .catch((error) => console.error('Fetch error:', error));
+            .catch((error) => {
+                console.error('Fetch error:', error)
+                
+            });
     };
 
 	return (
@@ -51,6 +58,7 @@ export const Login = () => {
                     <div className="mb-4">
                         <label htmlFor = "password">Password</label>
                         <input type = "password" className="form-control" id= "password" value={password} onChange ={(e)=>setPassword(e.target.value)} placeholder="Enter password"></input>
+                        <p className="text-danger">{msgError ? msgError:null}</p>
                     </div>
                     <div className="text-center">
                         <button type="submit" className="btn btn-primary w-100">Login</button>
