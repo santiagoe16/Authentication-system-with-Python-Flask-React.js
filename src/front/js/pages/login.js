@@ -9,8 +9,6 @@ export const Login = () => {
     const [msgError, setMsgError] = useState("")
     const navigate = useNavigate()
 
-    // useEffect(()=>localStorage.removeItem("jwt-token"),[])
-
     const handleSubmit = (e) => { 
         e.preventDefault();
         
@@ -20,7 +18,8 @@ export const Login = () => {
             email: email,
             password: password
         };
-    
+        console.log(raw);
+        
         const requestOptions = {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
@@ -38,6 +37,8 @@ export const Login = () => {
             .then((result) =>  {
                 localStorage.setItem("jwt-token", result.access_token);
                 actions.changeAuthenticated(true)
+                console.log(localStorage.getItem('jwt-token'));
+                
                 navigate("/private");
             })
             .catch((error) => {

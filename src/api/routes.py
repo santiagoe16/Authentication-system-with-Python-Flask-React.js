@@ -45,6 +45,7 @@ def login():
         return jsonify({"msg": "Bad email or password"}), 401
 
     access_token = create_access_token(identity=user.id)
+    print(access_token)
     return jsonify(access_token=access_token), 200
 
 # Protege una ruta con jwt_required, bloquea las peticiones sin un JWT válido
